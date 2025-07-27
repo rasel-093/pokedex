@@ -5,11 +5,16 @@ import 'package:pokedex/providers/pokemon_data_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class PokemonListTile extends ConsumerWidget {
-  final String pokemanurl;
-  const PokemonListTile({super.key, required this.pokemanurl});
+  final String pokemonurl;
+  late FavoritePokemonsProvider _favoritePokemonsProvider;
+  late List<String> _favoritePokemons;
+  PokemonListTile({super.key, required this.pokemonurl});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pokemon = ref.watch(pokemonDataProvider(pokemanurl));
+    _favoritePokemonsProvider = ref.watch(favoritePokemonsProvider.notifier);
+    _favoritePokemons = ref.watch(favoritePokemonsProvider);
+    final pokemon = ref.watch(pokemonDataProvider(pokemonurl));
+
     return pokemon.when(
       data: (data) {
         return _tile(context, false, data);
@@ -40,8 +45,19 @@ class PokemonListTile extends ConsumerWidget {
         ),
         subtitle: Text('Has ${pokemon?.moves?.length.toString() ?? 0} moves'),
         trailing: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.favorite_border),
+          onPressed: () {
+            if (_favoritePokemons.contains(pokemonurl)) {
+              _favoritePokemonsProvider.removeFavoritePokeman(pokemonurl);
+            } else {
+              _favoritePokemonsProvider.addFavoritePokeman(pokemonurl);
+            }
+          },
+          icon: Icon(
+            _favoritePokemons.contains(pokemonurl)
+                ? Icons.favorite
+                : Icons.favorite_border,
+            color: Colors.red,
+          ),
         ),
       ),
     );

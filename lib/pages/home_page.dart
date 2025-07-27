@@ -82,7 +82,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               itemCount: _homePageData.data?.results?.length ?? 0,
               itemBuilder: (context, index) {
                 PokemonListResult pokemon = _homePageData.data!.results![index];
-                return PokemonListTile(pokemanurl: pokemon.url!);
+                return PokemonListTile(pokemonurl: pokemon.url!);
               },
             ),
           ),

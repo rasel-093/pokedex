@@ -13,7 +13,7 @@ class HttpService {
         print('Error: ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
+      // print(e);
     }
     return null;
   }
