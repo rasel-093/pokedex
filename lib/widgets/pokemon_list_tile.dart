@@ -4,6 +4,8 @@ import 'package:pokedex/models/pokemon.dart';
 import 'package:pokedex/providers/pokemon_data_providers.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'pokemon_stats_card.dart';
+
 class PokemonListTile extends ConsumerWidget {
   final String pokemonurl;
   late FavoritePokemonsProvider _favoritePokemonsProvider;
@@ -31,32 +33,46 @@ class PokemonListTile extends ConsumerWidget {
   Widget _tile(BuildContext context, bool isLoading, Pokemon? pokemon) {
     return Skeletonizer(
       enabled: isLoading,
-      child: ListTile(
-        leading:
+      child: GestureDetector(
+        onTap: () {
+          if (!isLoading) {
+            showDialog(
+              context: context,
+              builder: (_) {
+                return PokemonStatsCard(pokemonUrl: pokemonurl);
+              },
+            );
+          }
+        },
+        child: ListTile(
+          leading:
+              pokemon != null
+                  ? CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      pokemon.sprites!.frontDefault!,
+                    ),
+                  )
+                  : CircleAvatar(),
+          title: Text(
             pokemon != null
-                ? CircleAvatar(
-                  backgroundImage: NetworkImage(pokemon.sprites!.frontDefault!),
-                )
-                : CircleAvatar(),
-        title: Text(
-          pokemon != null
-              ? pokemon.name!.toUpperCase()
-              : 'Pokemon name is loading....',
-        ),
-        subtitle: Text('Has ${pokemon?.moves?.length.toString() ?? 0} moves'),
-        trailing: IconButton(
-          onPressed: () {
-            if (_favoritePokemons.contains(pokemonurl)) {
-              _favoritePokemonsProvider.removeFavoritePokeman(pokemonurl);
-            } else {
-              _favoritePokemonsProvider.addFavoritePokeman(pokemonurl);
-            }
-          },
-          icon: Icon(
-            _favoritePokemons.contains(pokemonurl)
-                ? Icons.favorite
-                : Icons.favorite_border,
-            color: Colors.red,
+                ? pokemon.name!.toUpperCase()
+                : 'Pokemon name is loading....',
+          ),
+          subtitle: Text('Has ${pokemon?.moves?.length.toString() ?? 0} moves'),
+          trailing: IconButton(
+            onPressed: () {
+              if (_favoritePokemons.contains(pokemonurl)) {
+                _favoritePokemonsProvider.removeFavoritePokeman(pokemonurl);
+              } else {
+                _favoritePokemonsProvider.addFavoritePokeman(pokemonurl);
+              }
+            },
+            icon: Icon(
+              _favoritePokemons.contains(pokemonurl)
+                  ? Icons.favorite
+                  : Icons.favorite_border,
+              color: Colors.red,
+            ),
           ),
         ),
       ),
