@@ -89,7 +89,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   const Text("No favorite pokemons to show"),
                 if (_favoritePokemons.isNotEmpty)
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.5,
+                    height: MediaQuery.sizeOf(context).height * 0.4,
                     child: GridView.builder(
                       scrollDirection: Axis.horizontal,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
